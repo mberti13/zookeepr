@@ -58,6 +58,12 @@ function filterByQuery(query, animalsArray){
     return filteredResults;
 }
 
+//
+function findById(id, animalsArray){
+    const result = animalsArray.animals.filter(animal => animal.id === id)[0];
+
+    return result;
+}
 //Creates the initial request/response into the API
 app.get('/api/animals', (req, res) =>{
     
@@ -72,7 +78,20 @@ app.get('/api/animals', (req, res) =>{
     res.json(results);
 });
 
+//API response for filtering animals by id #
+app.get('/api/animals/:id', (req,res) =>{
+    const result = findById(req.params.id, animals);
+    //if response good, return results
+    if(result){
+        res.json(result);
+    }else{
+        //return a 404 error
+        res.send(404);
+    }
+
+});
+
 //Creates API Server at Port 3001
 app.listen(PORT, () =>{
-    console.log(`API server now on port 3001 ${PORT}!`);
+    console.log(`API server now on port ${PORT}!`);
 });
