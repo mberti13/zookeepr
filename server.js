@@ -5,9 +5,23 @@ const { type } = require('os');
 
 //adds port options for Heroku or the one we specified in codebase
 const PORT = process.env.PORT || 3001;
-
 //instantiates the server
 const app = express();
+
+
+// NEEDED TO RECEIVE DATA FORMATTED CORRECTLY IN POST REQUESTS
+//parse incoming string or array data
+//takes incoming POST data and converts it to key/value pairings
+//that can be accessed in the req.body object.
+//extended: true means there could be a nested sub-array
+app.use(express.urlencoded({ extended: true }));
+
+// parse incoming JSON data
+// takes incoming POST data in the form of JSON
+// and parses it into the req.body JavaScript object.
+app.use(express.json());
+
+
 
 //Filters JSON files results by user parameters
 function filterByQuery(query, animalsArray){
@@ -89,6 +103,15 @@ app.get('/api/animals/:id', (req,res) =>{
         res.send(404);
     }
 
+});
+
+// route to allow for server to accept data to be used and/or stored server-side
+app.post('/api/animals', (req, res) =>{
+
+    //req.body is where our incoming content will be
+    console.log(req.body);
+
+    res.json(req.body);
 });
 
 //Creates API Server at Port 3001
