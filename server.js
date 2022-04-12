@@ -78,6 +78,18 @@ function findById(id, animalsArray){
 
     return result;
 }
+
+//function to create a new animal through the POST request
+function createNewAnimal(body, animalsArray){
+    console.log(body);
+
+    //function main code
+
+
+    //return finished code to post route for response
+    return body;
+}
+
 //Creates the initial request/response into the API
 app.get('/api/animals', (req, res) =>{
     
@@ -109,7 +121,8 @@ app.get('/api/animals/:id', (req,res) =>{
 app.post('/api/animals', (req, res) =>{
 
     //req.body is where our incoming content will be
-    console.log(req.body);
+    //sets animal id to current index value since array starts at 0
+    req.body.id = animalsArray.animals.length.toString();
 
     res.json(req.body);
 });
