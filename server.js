@@ -122,7 +122,7 @@ app.post('/api/animals', (req, res) =>{
 
     //req.body is where our incoming content will be
     //sets animal id to current index value since array starts at 0
-    req.body.id = animalsArray.animals.length.toString();
+    req.body.id = animals.animals.length.toString();
 
     res.json(req.body);
 });
