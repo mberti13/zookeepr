@@ -1,7 +1,12 @@
 const animals = require('./data/animals.json');
 
+const fs = require('fs');
+
+const path = require('path');
+
 const express = require('express');
 const { type } = require('os');
+const { fstat } = require('fs');
 
 //adds port options for Heroku or the one we specified in codebase
 const PORT = process.env.PORT || 3001;
@@ -81,13 +86,25 @@ function findById(id, animalsArray){
 
 //function to create a new animal through the POST request
 function createNewAnimal(body, animalsArray){
-    console.log(body);
+    // console.log(body);
 
     //function main code
+    //set body into animal variable
+    const animal = body;
+    //pushes animal(body) to end of animalArray but not the JSON file()
+    animalsArray.animals.push(animal)
 
+    //WRITES DATA TO ANIMALS.JSON USING FS AND PATH
+    fs.writeFileSync(
+        //links __dirname to path to animals.json
+        path.join(__dirname, './data/animals.json'),
+        //saves array as JSON // NULL => dont want to edit any existing data
+        // 2 => create white space to make more readable
+        JSON.stringify({ animals: animalsArray }, null, 2)
+    );
 
     //return finished code to post route for response
-    return body;
+    return animal;
 }
 
 //Creates the initial request/response into the API
@@ -124,7 +141,10 @@ app.post('/api/animals', (req, res) =>{
     //sets animal id to current index value since array starts at 0
     req.body.id = animals.animals.length.toString();
 
-    res.json(req.body);
+    //add animal to JSON file and animals array in this function
+    const animal = createNewAnimal(req.body, animals);
+
+    res.json(animal);
 });
 
 //Creates API Server at Port 3001
