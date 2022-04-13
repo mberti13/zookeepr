@@ -107,6 +107,23 @@ function createNewAnimal(body, animalsArray){
     return animal;
 }
 
+//Validates data and return true if data meets specs
+function validateAnimal(animal){
+    if(!animal.name || typeof animal.name !== 'string'){
+        return false;
+    }
+    if(!animal.species || typeof animal.species !== 'string'){
+        return false;
+    }
+    if(!animal.diet || typeof animal.diet !== 'string'){
+        return false;
+    }
+    if(!animal.personalityTraits || typeof animal.personalityTraits !== 'string'){
+        return false;
+    }
+    return true;
+}
+
 //Creates the initial request/response into the API
 app.get('/api/animals', (req, res) =>{
     
@@ -141,11 +158,15 @@ app.post('/api/animals', (req, res) =>{
     //sets animal id to current index value since array starts at 0
     req.body.id = animals.animals.length.toString();
 
-    //add animal to JSON file and animals array in this function
-    const animal = createNewAnimal(req.body, animals);
-
-    res.json(animal);
-});
+    //if any data in req.body is incorrect, send 400 error back
+    // if(!validateAnimal(req.body)){
+    //     res.status(400).send('The animal is not properly formatted.');
+    // }else{
+        //add animal to JSON file and animals array in this function
+        const animal = createNewAnimal(req.body, animals);
+        res.json(animal);
+    }
+);
 
 //Creates API Server at Port 3001
 app.listen(PORT, () =>{
