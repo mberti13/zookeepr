@@ -1,12 +1,12 @@
-const animals = require('./data/animals.json');
+// const animals = require('./data/animals.json');
+
 
 const fs = require('fs');
 
 const path = require('path');
 
 const express = require('express');
-const { type } = require('os');
-const { fstat } = require('fs');
+
 
 //adds port options for Heroku or the one we specified in codebase
 const PORT = process.env.PORT || 3001;
@@ -92,7 +92,7 @@ function createNewAnimal(body, animalsArray){
     //set body into animal variable
     const animal = body;
     //pushes animal(body) to end of animalArray but not the JSON file()
-    animalsArray.animals.push(animal)
+    animalsArray.push(animal);
 
     //WRITES DATA TO ANIMALS.JSON USING FS AND PATH
     fs.writeFileSync(
@@ -100,33 +100,23 @@ function createNewAnimal(body, animalsArray){
         path.join(__dirname, './data/animals.json'),
         //saves array as JSON // NULL => dont want to edit any existing data
         // 2 => create white space to make more readable
-        JSON.stringify({ animals: animalsArray }, null, 2)
+        JSON.stringify( animalsArray, null, 2)
     );
 
     //return finished code to post route for response
     return animal;
 }
 
-//Validates data and return true if data meets specs
-function validateAnimal(animal){
-    if(!animal.name || typeof animal.name !== 'string'){
-        return false;
-    }
-    if(!animal.species || typeof animal.species !== 'string'){
-        return false;
-    }
-    if(!animal.diet || typeof animal.diet !== 'string'){
-        return false;
-    }
-    if(!animal.personalityTraits || typeof animal.personalityTraits !== 'string'){
-        return false;
-    }
-    return true;
+const readFile = () =>{
+    const animals = JSON.parse(fs.readFileSync(path.join(__dirname, './data/animals.json')));
+    return animals;
 }
 
 //Creates the initial request/response into the API
 app.get('/api/animals', (req, res) =>{
-    
+    const animals = readFile();
+    // JSON.parse(fs.readFileSync(path.join(__dirname, './data/animals.json')));
+
     let results = animals;
     console.log(animals);
 
@@ -140,6 +130,7 @@ app.get('/api/animals', (req, res) =>{
 
 //API response for filtering animals by id #
 app.get('/api/animals/:id', (req,res) =>{
+    const animals = readFile();
     const result = findById(req.params.id, animals);
     //if response good, return results
     if(result){
@@ -153,17 +144,18 @@ app.get('/api/animals/:id', (req,res) =>{
 
 // route to allow for server to accept data to be used and/or stored server-side
 app.post('/api/animals', (req, res) =>{
-
+    const animalsObject = readFile();
     //req.body is where our incoming content will be
     //sets animal id to current index value since array starts at 0
-    req.body.id = animals.animals.length.toString();
+    console.log(animalsObject.animals.length);
+    req.body.id = animalsObject.animals.length.toString();
 
     //if any data in req.body is incorrect, send 400 error back
     // if(!validateAnimal(req.body)){
     //     res.status(400).send('The animal is not properly formatted.');
     // }else{
         //add animal to JSON file and animals array in this function
-        const animal = createNewAnimal(req.body, animals);
+        const animal = createNewAnimal(req.body, animalsObject.animals);
         res.json(animal);
     }
 );
