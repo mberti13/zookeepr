@@ -102,7 +102,7 @@ function createNewAnimal(body, animalsArray){
         path.join(__dirname, './data/animals.json'),
         //saves array as JSON // NULL => dont want to edit any existing data
         // 2 => create white space to make more readable
-        JSON.stringify( animalsArray, null, 2)
+        JSON.stringify({ animals: animalsArray }, null, 2)
     );
 
     //return finished code to post route for response
