@@ -166,10 +166,20 @@ app.get('/', (req, res) =>{
     res.sendFile(path.join(__dirname, './public/zookeepr-public/zookeepr-public/index.html'));
 });
 
-//route for index.html to be served as homepage in server
+//route for animals.html
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/zookeepr-public/animals.html'));
+  });
+//route for zookeepers.html
+app.get('/zookeepers', (req, res) =>{
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/zookeepr-public/zookeepers.html'));
+});
 
-//route for index.html to be served as homepage in server
-
+//wildcard route to catch invalid requests(nonexistent URL locations) and send back to index
+//Wildcards should always come last in requests
+app.get('*', (req, res) =>{
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/zookeepr-public/index.html'));
+});
 
 //Creates API Server at Port 3001
 app.listen(PORT, () =>{
