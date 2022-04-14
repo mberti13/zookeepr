@@ -13,6 +13,8 @@ const PORT = process.env.PORT || 3001;
 //instantiates the server
 const app = express();
 
+//middleware to get front end script and styling
+app.use(express.static('public/zookeepr-public/zookeepr-public'));
 
 // NEEDED TO RECEIVE DATA FORMATTED CORRECTLY IN POST REQUESTS
 //parse incoming string or array data
@@ -159,6 +161,15 @@ app.post('/api/animals', (req, res) =>{
         res.json(animal);
     }
 );
+//route for index.html to be served as homepage in server
+app.get('/', (req, res) =>{
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/zookeepr-public/index.html'));
+});
+
+//route for index.html to be served as homepage in server
+
+//route for index.html to be served as homepage in server
+
 
 //Creates API Server at Port 3001
 app.listen(PORT, () =>{
